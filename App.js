@@ -31,7 +31,7 @@ class MozzarellaStick extends React.Component {
     render() {
         let img = this.state.isGrinning ? require('./img/mozz-stick-grin.png') : require('./img/mozz-stick.png');
         return (
-                <TouchableWithoutFeedback onPress={this._onPress.bind(this)} onLongPress={this._onLongPress} underlayColor="black">
+                <TouchableWithoutFeedback onPress={this._onPress.bind(this)} onLongPress={this._onLongPress}>
                     <Image source={img}/>
                 </TouchableWithoutFeedback>
         );
