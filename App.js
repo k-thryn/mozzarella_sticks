@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableHighlight, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableWithoutFeedback, Alert } from 'react-native';
 
 export default class App extends React.Component {
   render() {
@@ -31,9 +31,9 @@ class MozzarellaStick extends React.Component {
     render() {
         let img = this.state.isGrinning ? require('./img/mozz-stick-grin.png') : require('./img/mozz-stick.png');
         return (
-                <TouchableHighlight onPress={this._onPress.bind(this)} onLongPress={this._onLongPress} underlayColor="black">
+                <TouchableWithoutFeedback onPress={this._onPress.bind(this)} onLongPress={this._onLongPress} underlayColor="black">
                     <Image source={img}/>
-                </TouchableHighlight>
+                </TouchableWithoutFeedback>
         );
     }
 }
