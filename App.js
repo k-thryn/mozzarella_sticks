@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, Row, TouchableWithoutFeedback, Alert, Animated } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity, TouchableWithoutFeedback, Alert, Animated } from 'react-native';
 import { MapView, Permissions, Location } from 'expo';
+import MapButton from './components/MapButton.js';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -87,10 +88,10 @@ class MozzarellaStickFinder extends React.Component {
                         }
                         ).start();
         }
-        // See if permissions have been granted.     TODO: may not need this
-        if (nextProps.locationPermissionsGranted != this.props.locationPermissionsGranted) {
-            
-        }
+    }
+    
+    onPressBtn() {
+        
     }
     
     render() {
@@ -98,7 +99,12 @@ class MozzarellaStickFinder extends React.Component {
             let { flex } = this.state;
             return (
                     <Animated.View style={{flex: flex, position: 'relative', alignSelf: 'stretch'}}>
-                    <MapView style={styles.map}></MapView>
+                    <MapView style={[StyleSheet.absoluteFill, styles.map]}>
+                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', height: 25}}>
+                    <MapButton title='Use current location'></MapButton>
+                    <MapButton title='Find sticks with zip'></MapButton>
+                    </View>
+                    </MapView>
                     </Animated.View>
                     );
         }
@@ -123,6 +129,6 @@ const styles = StyleSheet.create({
                                  },
                                  // map styles
                                  map: {
-                                 ...StyleSheet.absoluteFillObject
+                                 zIndex: -1,
                                  }
                                  });
