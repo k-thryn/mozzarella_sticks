@@ -13,7 +13,7 @@ export default class App extends React.Component {
         return (
                 <ScrollView contentContainerStyle={styles.container}>
                 <Text>mozzarella stick</Text>
-                <MozzarellaStick></MozzarellaStick>
+                <MozzarellaStick />
                 </ScrollView>
                 );
     }
@@ -99,12 +99,12 @@ class MozzarellaStickFinder extends React.Component {
             let { flex } = this.state;
             return (
                     <Animated.View style={{flex: flex, position: 'relative', alignSelf: 'stretch'}}>
-                    <MapView style={[StyleSheet.absoluteFill, styles.map]}>
-                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', height: 25}}>
-                    <MapButton title='Use current location'></MapButton>
-                    <MapButton title='Find sticks with zip'></MapButton>
-                    </View>
-                    </MapView>
+                        <MapView style={[StyleSheet.absoluteFill, styles.map]}>
+                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', position: 'absolute', top: 0}}>
+                                <MapButton title='Use current location'></MapButton>
+                                <MapButton title='Enter zip code'></MapButton>
+                            </View>
+                        </MapView>
                     </Animated.View>
                     );
         }
