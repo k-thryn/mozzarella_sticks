@@ -1,7 +1,5 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import { MapView, Permissions, Location } from 'expo';
-import MapButton from './components/MapButton.js';
 import MozzarellaStick from './components/MozzarellaStick.js';
 
 export default class App extends React.Component {
