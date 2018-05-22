@@ -10,8 +10,8 @@ export default class MapButton extends React.Component {
     
     render() {
         return (
-                <TouchableOpacity style={styles.button} onPress={this.onPressBtn}>
-                <Text style={styles.buttonText}>{this.props.title}</Text>
+                <TouchableOpacity style={styles.button} onPress={this.props.onPress}>
+                <Text style={styles.buttonText}>{this.props.children}</Text>
                 </TouchableOpacity>
         );
     }
@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
                                  // Button text
                                  buttonText: {
                                  padding: 20,
-                                 color: 'black',
-                                 //alignSelf: 'center',
+                                 color: 'black'
                                  }
 });
