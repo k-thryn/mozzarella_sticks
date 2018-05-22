@@ -11,7 +11,7 @@ export default class App extends React.Component {
     render() {
         return (
                 <ScrollView contentContainerStyle={styles.container}>
-                <Text>mozzarella stick</Text>
+                <Text>mozzarella stick finder</Text>
                 <MozzarellaStick />
                 </ScrollView>
                 );
