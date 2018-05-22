@@ -13,24 +13,9 @@ export default class MozzarellaStick extends React.Component {
         this.setState(previousState => {
                       return {isGrinning: !(previousState.isGrinning), showMap: !(previousState.showMap)};
                       });
-        if (this.state.showMap) {
-            let locationAllowed = this.getPermissions();
-        }
     }
     
-    // Register location permissions.
-    async getPermissions() {
-        // Get current permission status.
-        const { status } = await Permissions.getAsync(Permissions.LOCATION);
-        if (status !== 'granted') {
-            Alert.alert('Enable location permissions to find mozzarella sticks near you.');
-            // Ask for permission.
-            let { status } = await Permissions.askAsync(Permissions.LOCATION);
-            return (status === 'granted');
-        } else {
-            return true;
-        }
-    }
+    
     
     
     // because I CAN

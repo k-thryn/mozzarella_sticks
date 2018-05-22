@@ -10,7 +10,7 @@ export default class MozzarellaStickFinder extends React.Component {
         this.state = {visible: props.showMap, flex: new Animated.Value(initialFlex)};
     }
     
-    // On props change
+    // On props change - are we still being displayed?
     componentWillReceiveProps(nextProps) {
         // Animate flex value on map toggle
         if (nextProps.showMap != this.props.showMap) {
@@ -25,9 +25,26 @@ export default class MozzarellaStickFinder extends React.Component {
         }
     }
     
+    // Register location permissions.
+    async getPermissions() {
+        // Get current permission status.
+        const { status } = await Permissions.getAsync(Permissions.LOCATION);
+        if (status !== 'granted') {
+            Alert.alert('Enable location permissions to find mozzarella sticks near you.');
+            // Ask for permission.
+            let { status } = await Permissions.askAsync(Permissions.LOCATION);
+            return (status === 'granted');
+        } else {
+            return true;
+        }
+    }
+    
     // On press for 'use current location' option
     onPressCurrentLoc() {
-        alert('on current loc');
+        // consent 👏 is 👏 sexy 👏
+        this.getPermissions();
+        return;
+        
     }
     
     // On press for 'enter zip code' option
