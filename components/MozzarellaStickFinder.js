@@ -14,7 +14,9 @@ export default class MozzarellaStickFinder extends React.Component {
     componentWillReceiveProps(nextProps) {
         // Animate flex value on map toggle
         if (nextProps.showMap != this.props.showMap) {
-            this.setState({ visible: true, flex: this.state.flex });
+            this.setState(previousState => {
+                          return { visible: true, flex: previousState.flex, location: previousState.location };
+                          });
             Animated.timing(
                             this.state.flex,
                             {
@@ -40,11 +42,23 @@ export default class MozzarellaStickFinder extends React.Component {
     }
     
     // On press for 'use current location' option
-    onPressCurrentLoc() {
+    async onPressCurrentLoc() {
         // consent 👏 is 👏 sexy 👏
-        this.getPermissions();
-        return;
+        await this.getPermissions();
         
+        let location = await Location.getCurrentPositionAsync({ enableHighAccuracy: true });
+        
+        if (location && location.coords) {
+            let region = {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: .001,
+            longitudeDelta: .001
+            }
+            this.setState(previousState => {
+                          return { visible: previousState.visible, flex: previousState.flex, location: location, region: region};
+                          });
+        }
     }
     
     // On press for 'enter zip code' option
@@ -52,16 +66,23 @@ export default class MozzarellaStickFinder extends React.Component {
         alert('zippity zip zip');
     }
     
+    // Render component
     render() {
         if (this.state.visible) {
-            let { flex } = this.state;
+            let { flex, location, region } = this.state;
             return (
                     <Animated.View style={{flex: flex, position: 'relative', alignSelf: 'stretch'}}>
-                    <MapView style={[StyleSheet.absoluteFill, styles.map]}>
-                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', position: 'absolute', top: 0}}>
+                    <MapView style={[StyleSheet.absoluteFill, styles.map]}
+                    region={region}>
+                    <View style={styles.buttonRow}>
                     <MapButton onPress={this.onPressCurrentLoc.bind(this)}>Use current location</MapButton>
                     <MapButton onPress={this.onPressEnterZip.bind(this)}>Enter zip code</MapButton>
                     </View>
+                    // marker for current location, if there is one
+                    {region && (
+                    <MapView.Marker coordinate={{latitude: region.latitude, longitude: region.longitude}}/>
+                    )}
+                    
                     </MapView>
                     </Animated.View>
                     );
@@ -73,8 +94,16 @@ export default class MozzarellaStickFinder extends React.Component {
 }
 
 const styles = StyleSheet.create({
-                  // map styles
-                  map: {
-                  zIndex: -1,
-                  }
-})
+                                 // map styles
+                                 map: {
+                                 zIndex: -1,
+                                 },
+                                 // button row
+                                 buttonRow: {
+                                 flex: 1,
+                                 flexDirection: 'row',
+                                 justifyContent: 'space-between',
+                                 position: 'absolute',
+                                 top: 0
+                                 }
+                                 })

@@ -2,6 +2,8 @@ import React from 'react';
 import { View, TouchableWithoutFeedback, Image } from 'react-native';
 import MozzarellaStickFinder from './MozzarellaStickFinder.js';
 
+
+
 export default class MozzarellaStick extends React.Component {
     constructor(props) {
         super(props);
