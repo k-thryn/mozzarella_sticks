@@ -85,13 +85,10 @@ export default class MozzarellaStickFinder extends React.Component {
         let response = await fetch(url);
         let responseJson = await response.json();
         let results = responseJson.results;
-        console.log(`Call before: ${results[0].geometry.location.lat}`);
         this.setState(previousState => {
-                      console.log(`Call during: ${results[0].geometry.location.lat}`);
                       return { visible: previousState.visible, flex: previousState.flex, location: previousState.location, region: previousState.region,
                       sticks: results };
                       });
-        console.log(`Call after: ${results[0].geometry.location.lat}`);
     }
     
     // Render component
