@@ -2,28 +2,36 @@ import React from 'react';
 import { Animated, View, StyleSheet } from 'react-native';
 import { MapView, Permissions, Location } from 'expo';
 import MapButton from './MapButton.js';
+import Vendor from './Vendor.js';
+
+const grinningMozz = require('../img/italian-hand.png');
 
 export default class MozzarellaStickFinder extends React.Component {
     constructor(props) {
         super(props);
         let initialFlex = props.showMap ? 1 : 0;
-        this.state = {visible: props.showMap, flex: new Animated.Value(initialFlex)};
+        this.state = {visible: props.showMap, flex: new Animated.Value(initialFlex), sticks: []};
     }
     
-    // On props change - are we still being displayed?
-    componentWillReceiveProps(nextProps) {
+    // On props or state change
+    componentDidUpdate(prevProps, prevState) {
         // Animate flex value on map toggle
-        if (nextProps.showMap != this.props.showMap) {
+        if (prevProps.showMap != this.props.showMap) {
             this.setState(previousState => {
-                          return { visible: true, flex: previousState.flex, location: previousState.location };
+                          return { visible: true, flex: previousState.flex, location: previousState.location, sticks: previousState.sticks
+                          };
                           });
             Animated.timing(
                             this.state.flex,
                             {
-                            toValue: nextProps.showMap ? 1 : 0,
+                            toValue: this.props.showMap ? 1 : 0,
                             duration: 1000,
                             }
                             ).start();
+        }
+        // On region change - refresh list of nearby vendors
+        if (prevState.region != this.state.region) {
+            this.onRegionChange();
         }
     }
     
@@ -52,11 +60,11 @@ export default class MozzarellaStickFinder extends React.Component {
             let region = {
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
-            latitudeDelta: .001,
-            longitudeDelta: .001
+            latitudeDelta: .003,
+            longitudeDelta: .003
             }
             this.setState(previousState => {
-                          return { visible: previousState.visible, flex: previousState.flex, location: location, region: region};
+                          return { visible: previousState.visible, flex: previousState.flex, location: location, region: region, sticks: previousState.sticks};
                           });
         }
     }
@@ -66,23 +74,47 @@ export default class MozzarellaStickFinder extends React.Component {
         alert('zippity zip zip');
     }
     
+    // On map press: for now, creates mozzarella stick locations via press location
+    onMapPress(e) {
+        let coordinate = e.nativeEvent.coordinate;
+    }
+    
+    // on map region change
+    async onRegionChange() {
+        let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.state.region.latitude},${this.state.region.longitude}&radius=10000&keyword=mozzarella%20sticks&key=AIzaSyBcjH-PDXCfO2nwn_r2I8lavt2zVc07pnw`;
+        let response = await fetch(url);
+        let responseJson = await response.json();
+        let results = responseJson.results;
+        console.log(`Call before: ${results[0].geometry.location.lat}`);
+        this.setState(previousState => {
+                      console.log(`Call during: ${results[0].geometry.location.lat}`);
+                      return { visible: previousState.visible, flex: previousState.flex, location: previousState.location, region: previousState.region,
+                      sticks: results };
+                      });
+        console.log(`Call after: ${results[0].geometry.location.lat}`);
+    }
+    
     // Render component
     render() {
         if (this.state.visible) {
-            let { flex, location, region } = this.state;
+            let { flex, location, region, sticks } = this.state;
             return (
                     <Animated.View style={{flex: flex, position: 'relative', alignSelf: 'stretch'}}>
                     <MapView style={[StyleSheet.absoluteFill, styles.map]}
-                    region={region}>
+                    region={region}
+                    onPress={this.onMapPress.bind(this)}>
                     <View style={styles.buttonRow}>
                     <MapButton onPress={this.onPressCurrentLoc.bind(this)}>Use current location</MapButton>
-                    <MapButton onPress={this.onPressEnterZip.bind(this)}>Enter zip code</MapButton>
                     </View>
                     // marker for current location, if there is one
                     {region && (
-                    <MapView.Marker coordinate={{latitude: region.latitude, longitude: region.longitude}}/>
+                                <MapView.Marker coordinate={{latitude: region.latitude, longitude: region.longitude}} image={grinningMozz}/>
                     )}
-                    
+                    // markers for found mozzarella stick locations
+                    {sticks.map(stick => (
+                                          <Vendor location={stick.geometry.location} key={stick.id} name={stick.name}/> )
+                    )
+                    }
                     </MapView>
                     </Animated.View>
                     );

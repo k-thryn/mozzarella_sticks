@@ -18,9 +18,6 @@ export default class MozzarellaStick extends React.Component {
                       });
     }
     
-    
-    
-    
     // because I CAN
     _onLongPress() {
         Alert.alert('MUUUUSSSZZZAREELL');
