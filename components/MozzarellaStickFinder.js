@@ -18,8 +18,7 @@ export default class MozzarellaStickFinder extends React.Component {
         // Animate flex value on map toggle
         if (prevProps.showMap != this.props.showMap) {
             this.setState(previousState => {
-                          return { visible: true, flex: previousState.flex, location: previousState.location, sticks: previousState.sticks
-                          };
+                          return { visible: true };
                           });
             Animated.timing(
                             this.state.flex,
@@ -60,11 +59,11 @@ export default class MozzarellaStickFinder extends React.Component {
             let region = {
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
-            latitudeDelta: .003,
-            longitudeDelta: .003
+            latitudeDelta: .01,
+            longitudeDelta: .01
             }
             this.setState(previousState => {
-                          return { visible: previousState.visible, flex: previousState.flex, location: location, region: region, sticks: previousState.sticks};
+                          return { location: location, region: region };
                           });
         }
     }
@@ -86,8 +85,7 @@ export default class MozzarellaStickFinder extends React.Component {
         let responseJson = await response.json();
         let results = responseJson.results;
         this.setState(previousState => {
-                      return { visible: previousState.visible, flex: previousState.flex, location: previousState.location, region: previousState.region,
-                      sticks: results };
+                      return { sticks: results };
                       });
     }
     

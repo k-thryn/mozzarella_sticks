@@ -18,7 +18,7 @@ export default class Vendor extends React.Component {
     
     render() {
         return (
-                <TouchableOpacity onPress={this.onSelect}>
+                <TouchableOpacity onPress={this.onSelect.bind(this)}>
                 <MapView.Marker
                 title={this.props.name}
                 image={grinningMozz}
