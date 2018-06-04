@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, View, StyleSheet } from 'react-native';
+import { Animated, View, StyleSheet, Text } from 'react-native';
 import { MapView, Permissions, Location } from 'expo';
 import MapButton from './MapButton.js';
 import Vendor from './Vendor.js';
@@ -18,7 +18,7 @@ export default class MozzarellaStickFinder extends React.Component {
         // Animate flex value on map toggle
         if (prevProps.showMap != this.props.showMap) {
             this.setState(previousState => {
-                          return { visible: true };
+                          return { visible: this.props.showMap };
                           });
             Animated.timing(
                             this.state.flex,
@@ -73,11 +73,6 @@ export default class MozzarellaStickFinder extends React.Component {
         alert('zippity zip zip');
     }
     
-    // On map press: for now, creates mozzarella stick locations via press location
-    onMapPress(e) {
-        let coordinate = e.nativeEvent.coordinate;
-    }
-    
     // on map region change
     async onRegionChange() {
         let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.state.region.latitude},${this.state.region.longitude}&radius=10000&keyword=mozzarella%20sticks&key=AIzaSyBcjH-PDXCfO2nwn_r2I8lavt2zVc07pnw`;
@@ -93,6 +88,15 @@ export default class MozzarellaStickFinder extends React.Component {
     render() {
         if (this.state.visible) {
             let { flex, location, region, sticks } = this.state;
+            if (!region) {
+                return (
+                        <Animated.View style={{flex: flex, position: 'relative', alignSelf: 'stretch'}}>
+                        <View style={styles.buttonRow}>
+                        <MapButton onPress={this.onPressCurrentLoc.bind(this)}>Use current location</MapButton>
+                        </View>
+                        </Animated.View>
+                )
+            }
             return (
                     <Animated.View style={{flex: flex, position: 'relative', alignSelf: 'stretch'}}>
                     <MapView style={[StyleSheet.absoluteFill, styles.map]}
