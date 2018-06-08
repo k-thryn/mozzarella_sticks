@@ -3,8 +3,7 @@ import { Animated, View, StyleSheet, Text } from 'react-native';
 import { MapView, Permissions, Location } from 'expo';
 import MapButton from './MapButton.js';
 import Vendor from './Vendor.js';
-
-const grinningMozz = require('../img/italian-hand.png');
+import MozzMap from './MozzMap.js';
 
 export default class MozzarellaStickFinder extends React.Component {
     constructor(props) {
@@ -99,8 +98,8 @@ export default class MozzarellaStickFinder extends React.Component {
     render() {
         if (this.props.show) {
             let { flex, location, region, sticks, showMap } = this.state;
-            if (!showMap) {
-                return (
+            if (!showMap)
+            {                return (
                         <Animated.View style={{flex: flex, position: 'relative', alignSelf: 'stretch'}}>
                         <View style={styles.buttonRow}>
                         <MapButton onPress={this.onPressCurrentLoc.bind(this)}>Use current location</MapButton>
@@ -108,25 +107,11 @@ export default class MozzarellaStickFinder extends React.Component {
                         </Animated.View>
                 )
             }
-            return (
-                    <Animated.View style={{flex: flex, position: 'relative', alignSelf: 'stretch'}}>
-                    <MapView style={[StyleSheet.absoluteFill, styles.map]}
-                    region={region}>
-                    <View style={styles.buttonRow}>
-                    <MapButton onPress={this.removeRegion.bind(this)}>←</MapButton>
-                    </View>
-                    // marker for current location
-                    {region && (
-                                <MapView.Marker coordinate={{latitude: region.latitude, longitude: region.longitude}} image={grinningMozz}/>
-                    )}
-                    // markers for found mozzarella stick locations
-                    {sticks.map(stick => (
-                                          <Vendor location={stick.geometry.location} key={stick.id} name={stick.name}/> )
-                    )
-                    }
-                    </MapView>
-                    </Animated.View>
-                    );
+            else {
+                return (
+                        <MozzMap flex={flex} region={region} exit={this.removeRegion.bind(this)} sticks={sticks} />
+                        )
+            }
         }
         else {
             return null;
