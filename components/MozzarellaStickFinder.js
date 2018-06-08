@@ -100,8 +100,6 @@ export default class MozzarellaStickFinder extends React.Component {
         if (this.props.show) {
             let { flex, location, region, sticks, showMap } = this.state;
             if (!showMap) {
-                // use half flex
-                let factor = new Animated.Value(2);
                 return (
                         <Animated.View style={{flex: flex, position: 'relative', alignSelf: 'stretch'}}>
                         <View style={styles.buttonRow}>
