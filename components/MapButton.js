@@ -23,15 +23,14 @@ const styles = StyleSheet.create({
                                  button: {
                                  backgroundColor:'white',
                                  opacity: .7,
-                                 borderRadius: 25,
+                                 borderRadius: 15,
                                  borderWidth: 1,
                                  borderColor: 'lightgray',
-                                 alignItems: 'center',
-                                 flex: 1
+                                 alignItems: 'center'
                                  },
                                  // Button text
                                  buttonText: {
-                                 padding: 20,
+                                 padding: 15,
                                  color: 'black'
                                  }
 });

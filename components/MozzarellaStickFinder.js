@@ -9,22 +9,28 @@ const grinningMozz = require('../img/italian-hand.png');
 export default class MozzarellaStickFinder extends React.Component {
     constructor(props) {
         super(props);
-        let initialFlex = props.showMap ? 1 : 0;
-        this.state = {visible: props.showMap, flex: new Animated.Value(initialFlex), sticks: []};
+        let initialFlex = props.show ? 1 : 0;
+        this.state = {flex: new Animated.Value(initialFlex), sticks: []};
     }
     
     // On props or state change
     componentDidUpdate(prevProps, prevState) {
         // Animate flex value on map toggle
-        if (prevProps.showMap != this.props.showMap) {
-            this.setState(previousState => {
-                          return { visible: this.props.showMap };
-                          });
+        if (prevProps.show != this.props.show) {
             Animated.timing(
                             this.state.flex,
                             {
-                            toValue: this.props.showMap ? 1 : 0,
-                            duration: 1000,
+                            toValue: this.props.show ? .5 : 0,
+                            duration: 500,
+                            }
+                            ).start();
+        }
+        if (this.props.show && (prevState.showMap != this.state.showMap)) {
+            Animated.timing(
+                            this.state.flex,
+                            {
+                            toValue: this.state.showMap ? 1 : .5,
+                            duration: 500,
                             }
                             ).start();
         }
@@ -80,15 +86,22 @@ export default class MozzarellaStickFinder extends React.Component {
         let responseJson = await response.json();
         let results = responseJson.results;
         this.setState(previousState => {
-                      return { sticks: results };
+                      return { showMap: true, sticks: results };
                       });
+    }
+    
+    // Hide map.
+    removeRegion() {
+        this.setState({ showMap: false });
     }
     
     // Render component
     render() {
-        if (this.state.visible) {
-            let { flex, location, region, sticks } = this.state;
-            if (!region) {
+        if (this.props.show) {
+            let { flex, location, region, sticks, showMap } = this.state;
+            if (!showMap) {
+                // use half flex
+                let factor = new Animated.Value(2);
                 return (
                         <Animated.View style={{flex: flex, position: 'relative', alignSelf: 'stretch'}}>
                         <View style={styles.buttonRow}>
@@ -100,12 +113,11 @@ export default class MozzarellaStickFinder extends React.Component {
             return (
                     <Animated.View style={{flex: flex, position: 'relative', alignSelf: 'stretch'}}>
                     <MapView style={[StyleSheet.absoluteFill, styles.map]}
-                    region={region}
-                    onPress={this.onMapPress.bind(this)}>
+                    region={region}>
                     <View style={styles.buttonRow}>
-                    <MapButton onPress={this.onPressCurrentLoc.bind(this)}>Use current location</MapButton>
+                    <MapButton onPress={this.removeRegion.bind(this)}>←</MapButton>
                     </View>
-                    // marker for current location, if there is one
+                    // marker for current location
                     {region && (
                                 <MapView.Marker coordinate={{latitude: region.latitude, longitude: region.longitude}} image={grinningMozz}/>
                     )}
